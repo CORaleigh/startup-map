@@ -775,13 +775,13 @@
 				<h3>About this Map</h3>
 			</div>
 			<div class="modal-body">
-				<p>Welcome! We built this map to help build connections in Raleigh’s growing startup community.  Raleigh has transformed over the last few years into a city that fosters innovation, collaboration, and entrepreneurship and this map sets out to showcase that transformation. From Technology and Life Sciences, to Design and Consumer Products, Raleigh is expanding quickly across a wide variety of sectors.</p>
+				<p>Welcome! We built this map to help build connections in Raleigh’s growing startup community. Raleigh has transformed over the last few years into a city that fosters innovation, collaboration, and entrepreneurship and this map sets out to showcase that transformation. From Technology and Life Sciences, to Design and Consumer Products, Raleigh is expanding quickly across a wide variety of sectors.</p>
 				<p>Whether you want to explore an industry as a whole, find a specific company, or join the team of one of our growing startups, this map is for you.</p>
 				<p>Want to know where to start? Here’s a few ways you can use this map:
 				<ul>
+				<li>Add your company. This map is designed to showcase our product-based startups and growth companies. Don’t see your company currently listed? Keep our map fresh and submit your information here.
+				<li>Find a job. Love to collaborate and create? We're always looking for people to join our innovation community. Use this map to see which of our emerging companies are currently hiring.
 				<li>Explore your surroundings. Discover everything your neighbors and community have to offer. Visit our map here.
-				<li>Find a job. Love to collaborate and create? We're always looking for people to join our innovation community. Use this map to see which companies are currently hiring.
-				<li>Add your company. Don’t see your business currently listed? Keep our map fresh and submit your information here.
 				<ul>
 				</p>
 				<p>Questions? Feedback? <a href="http://www.raleigh4u.com/contacts/" target="_blank">Contact us</a></p>
