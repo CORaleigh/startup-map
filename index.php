@@ -190,6 +190,7 @@
 				// markers array: name, type (icon), lat, long, description, uri, address
 				markers = new Array();
 				hiring = new Array();
+				raising = new Array();
 				<?php
 					$types = Array(
 							Array('#080808','Technology'),
@@ -230,7 +231,7 @@
 							$place[uri] = addslashes(htmlspecialchars($_linefix($place[uri])));
 							$place[address] = htmlspecialchars_decode(addslashes(htmlspecialchars($_linefix($place[address]))));
 							echo "
-								markers.push(['".$place[title]."', '".$place[type]."', '".$place[lat]."', '".$place[lng]."', '".$place[description]."', '".$place[uri]."', '".$place[address]."', ".$place[id].", '".$place[hiring]."', '".$place[hirelink]."']); 
+								markers.push(['".$place[title]."', '".$place[type]."', '".$place[lat]."', '".$place[lng]."', '".$place[description]."', '".$place[uri]."', '".$place[address]."', ".$place[id].", '".$place[hiring]."', '".$place[hirelink]."','".$place[raising]."']); 
 								markerTitles[".$marker_id."] = '".$place[title]."';
 							"; 
 							$count[$place[type]]++;
@@ -288,35 +289,122 @@
 				//addMarkers(markers)
 				$("#seemap").click(function(){
 					$("#modal_start").modal('hide');
-					$('#modeId').val("Who's Hiring");
+					$("#filterButtons .btn").removeClass('active');
+					$("#filterButtons .btn:eq(0)").addClass('active');
+					//$('#modeId').val("Who's Hiring");
 					addMarkers(markers)
 				});
 
+				$("#filterButtons .btn").click(function () {
+					console.log($(this).text());
+					switch ($(this).text()) {
+						case "View All":
+							showAll();			
+						break;
+						case "Who's Hiring?":
+							showHiring();												
+						break;
+						case "Who's Raising Money?":
+							showRaising();													
+						break;
+					}
+				});
+
+				function showAll () {
+					$("#list").show();						
+					$("#list1").hide();
+					$("#list2").hide();
+					$("#filterButtons").detach().appendTo("#list .filterDiv");
+					addMarkers(markers);
+				};
+
+				function showHiring () {
+							$("#list1").show();						
+							$("#list").hide();
+							$("#list2").hide();		
+							$("#filterButtons").detach().appendTo("#list1 .filterDiv");
+						clearMarkers();
+						hiring = [];
+						raising = [];
+					//var hiring = [];
+					for(var m=0;m<markers.length;m++){
+						if(markers[m][8] == '2'){
+							hiring.push(markers[m]);
+							
+						}
+						//gmarkers.push(hiring);
+					}
+						//markers.push(hiring);
+						addMarkers(hiring);								
+				};
+
+				function showRaising () {
+					$("#list2").show();						
+					$("#list").hide();
+					$("#list1").hide();		
+					$("#filterButtons").detach().appendTo("#list2 .filterDiv");	
+					clearMarkers();
+					//var hiring = [];
+					for(var m=0;m<markers.length;m++){
+						if(markers[m][10] == 'true'){
+							raising.push(markers[m]);
+							
+						}
+						//gmarkers.push(hiring);
+					}
+						//markers.push(hiring);
+						addMarkers(raising);					
+				}
+
 				$("#seehiring").click(function(){
 					$("#modal_start").modal('hide');
-					$('#modeId').val("See Map");
+					//$('#modeId').val("See Map");
+					showHiring();
+					$("#filterButtons .btn").removeClass('active');
+					$("#filterButtons .btn:eq(1)").addClass('active');					
+					//updateTOC('toMap');
+/*					clearMarkers();
+					//var hiring = [];
+					for(var m=0;m<markers.length;m++){
+						if(markers[m][8] == '2'){
+							hiring.push(markers[m]);
+							
+						}
+						//gmarkers.push(hiring);
+					}
+						//markers.push(hiring);
+						addMarkers(hiring);
+						updateTOC("toMap");*/
+				});
+				$("#seeraising").click(function(){
+					$("#modal_start").modal('hide');
+					showRaising();
+					$("#filterButtons .btn").removeClass('active');
+					$("#filterButtons .btn:eq(2)").addClass('active');					
+/*					$('#modeId').val("See Map");
 					//updateTOC('toMap');
 					clearMarkers();
 					//var hiring = [];
 					for(var m=0;m<markers.length;m++){
-						if(markers[m][8] == '2'){
-							hiring.push(markers[m]);
+						if(markers[m][10] == 'true'){
+							raising.push(markers[m]);
 							
 						}
 						//gmarkers.push(hiring);
 					}
 						//markers.push(hiring);
-						addMarkers(hiring);
-						updateTOC("toMap");
-				});
+						addMarkers(raising);
+						updateTOC("toMap");*/
+				});				
 
 				$('#modeId').click(function(){
 					$var = $('#modeId').val();
 
-					if ($var == "Who's Hiring"){
-						$('#modeId').val("See Map");
+				if ($var == "Who's Hiring"){
+						$('#modeId').val("Who's Raising");
 						clearMarkers();
 						hiring = [];
+						raising = [];
 					//var hiring = [];
 					for(var m=0;m<markers.length;m++){
 						if(markers[m][8] == '2'){
@@ -327,13 +415,29 @@
 					}
 						//markers.push(hiring);
 						addMarkers(hiring);
-						updateTOC("toMap");
+						updateTOC("toHiring");
+				}
+				else if ($var == "Who's Raising"){
+						$('#modeId').val("See Map");
+						clearMarkers();
+						hiring = [];
+						raising = [];
+					//var hiring = [];
+					for(var m=0;m<markers.length;m++){
+						if(markers[m][10] == 'true'){
+							raising.push(markers[m]);
+							
+						}
+						//gmarkers.push(hiring);
 					}
-
+						//markers.push(hiring);
+						addMarkers(raising);
+						updateTOC("toRaising");
+				}
 				else{
 					$('#modeId').val("Who's Hiring");
-					addMarkers(markers)
-					updateTOC("toHiring");
+					addMarkers(markers);
+					updateTOC("toMap");
 				}
 
 				})
@@ -348,14 +452,22 @@
 			function updateTOC(modeType){
 				if (modeType == "toMap")
 				{
-					$("#list1").show();
-					$("#list").hide();
+					$("#list").show();
+					$("#list1").hide();
 					console.log('showing list1...')
 				}
-				else
+				else if (modeType == "toHiring")
 				{
+					$("#list1").show();
+					$("#list").hide();
+					$("#list2").hide();
+					console.log('showing list1...')
+				}				
+				else if (modeType == "toRaising")
+				{
+					$("#list").hide();
 					$("#list1").hide();
-					$("#list").show();
+					$("#list2").show();
 				} 
 
 			}
@@ -437,6 +549,7 @@
               			var dbid = val[7];
               			var hiring = val[8];
               			var hirelink = val[9];
+              			var raising = val[10];
               			if(hiring && hiring.length && hiring == '2'){
                	 		// approved job link
                 			content += "<div class='hiring'><a href='" + hirelink + "' target='_blank'>Hiring Now!</a></div>";
@@ -630,15 +743,23 @@
 					<div class="buttons">
 						<a href="#modal_add" class="btn btn-large btn-success" data-toggle="modal"><i class="icon-plus-sign icon-white"></i>Add Company</a>
 						<a href="#modal_jobs" class="btn btn-large btn-success" data-toggle="modal"><i class="icon-plus-sign icon-white"></i>Add Job</a>
-						<input type="button" class="btn btn-large btn-info" id="modeId">
-					</div>
+<!-- 						<input type="button" class="btn btn-large btn-info" id="modeId">
+ -->					</div>
 				</div>
 			</div>
 		</div>
 		
 		<!-- right-side gutter -->
 		<div class="menu" id="menu">
+		
 			<ul class="list" id="list">
+				<center class="filterDiv">
+					<div id="filterButtons" class="btn-group btn-group-vertical" data-toggle="buttons-radio"  style="margin: 1em;">
+					  <button type="button" class="btn btn-primary active" style="width:160px;">View All</button>
+					  <button type="button" class="btn btn-primary" style="width:160px;">Who's Hiring?</button>
+					  <button type="button" class="btn btn-primary" style="width:160px;">Who's Raising Money?</button>
+					</div>			
+				</center>				
 				<?php
 					$types = Array(
 							Array('Technology','Technology','Technology'),
@@ -681,6 +802,7 @@
 						";
 					}
 				?>
+				
 				<li class="blurb">This map was made to connect and promote Raleigh's Startup Culture.</li>
 				<li class="attribution">
 					<!-- per our license, you may not remove this line -->
@@ -688,9 +810,12 @@
 					<br/>
 					Map tiles by Skobbler GmbH
 				</li>
+
 			</ul>
 
 			<ul class="list" id="list1" style= "height: 100%; display: none;">
+				<center class="filterDiv">	
+				</center>			
 				<?php
 					$types = Array(
 							Array('Technology','Technology'),
@@ -731,7 +856,9 @@
 							</li>
 						";
 					}
-				?> <li class="blurb">
+				?> 
+
+				<li class="blurb">
 					This map was made to connect and promote Raleigh's Startup Culture.
 				</li>
 				<li class="attribution">
@@ -741,7 +868,61 @@
 					Map tiles by Skobbler GmbH
 				</li>
 			</ul>
-			
+			<ul class="list" id="list2" style= "height: 100%; display: none;">
+				<center class="filterDiv">	
+				</center>
+				<?php
+					$types = Array(
+							Array('Technology','Technology'),
+							Array('Design-Media', 'Design-Media'), 
+							Array('Life Sciences', 'Life Sciences'),
+							Array('Consumer Products', 'Consumer Products'),
+							Array('Misc', 'Misc')
+							);
+
+					$marker_id = 0;
+					foreach($types as $type) {
+						if($type[0] != "event") {
+							//$markers = pg_query("SELECT * FROM places WHERE approved='1' AND hiring = '2' AND type='$type[1]' ORDER BY title");
+							$markers = pg_query("SELECT * FROM places WHERE approved='1' AND (lat > 0 or lng > 0) AND raising='true' AND type='$type[1]' ORDER BY title");
+						} else {
+							$markers = pg_query("SELECT * FROM events WHERE start_date > ".time()." AND start_date < ".(time()+4838400)." ORDER BY id DESC");
+						}
+						$markers_total = pg_num_rows($markers);
+						echo "
+							<li class='category'>
+								<div class='category_item'>
+									<div class='category_toggle filter_$type[1]' onClick=\"toggle('$type[1]')\"></div>
+									<a href='#' id=filter_$type[1] onClick=\"toggleList('$type[0]');\" class='category_info'><img src='./images/icons/$type[0].png' alt='' />$type[1]<span class='total'> ($markers_total)</span></a>
+								</div>
+								<ul class='list-items list-$type[1]'>
+						";
+						while($marker = pg_fetch_assoc($markers)) {
+							$marker_id = $marker[id];
+							echo "
+									<li class='".$marker[type]."'>
+										<a href='#' onMouseOver=\"markerListMouseOver('".$marker_id."')\" onMouseOut=\"markerListMouseOut('".$marker_id."')\" onClick=\"goToMarker('".$marker_id."');\">".$marker[title]."</a>
+									</li>
+							";
+							//$marker_id++;
+						}
+						echo "
+								</ul>
+							</li>
+						";
+					}
+				?> 
+
+				<li class="blurb">
+					This map was made to connect and promote Raleigh's Startup Culture.
+				</li>
+				<li class="attribution">
+					<!-- per our license, you may not remove this line -->
+					<?=$attribution?>
+					<br/>
+					Map tiles by Skobbler GmbH
+				</li>
+			</ul>			
 		</div>
 
 		<!-- start screen modal -->
@@ -756,9 +937,12 @@
 					<div id="seemap" class="btn btn-primary">
 						View Map
 					</div>
-					<div id="seehiring" class="btn btn-success">
+					<div id="seehiring" class="btn btn-warning" style="height: 32px;padding-top:10px;padding-bottom:0">
 						Who's Hiring?
 					</div>
+					<div id="seeraising" class="btn btn-success">
+						Who's Raising Money?
+					</div>					
 					<div id="quickadd" class="btn btn-inverse">
 						Add Company
 					</div>
@@ -860,12 +1044,25 @@
 						<div class="control-group">
 							<label class="control-label" for="add_description">Description</label>
 							<div class="controls">
-								<input type="text" class="input-xlarge" id="add_description" name="description" maxlength="150">
+								<input type="text" class="input-xlarge" id="add_description" name="description" maxlength="250">
 								<p class="help-block">
-									Brief, concise description. Max 150 chars.
+									Brief, concise description. Max 250 chars.
 								</p>
 							</div>
 						</div>
+						<div class="control-group">
+							<label class="control-label" for="add_raising">Raising Money?</label>
+							<div class="controls">
+								<div class="checkbox">
+								<label>
+								<input type="checkbox" class="input-xlarge" id="add_raising" name="raising" >
+								</label>
+								</div>
+								<p class="help-block">
+									I am looking to raise capital.
+								</p>
+							</div>
+						</div>						
 					</fieldset>
 				</div>
 				<div class="modal-footer">
@@ -889,13 +1086,14 @@
             uri = $form.find( '#add_uri' ).val(),
             description = $form.find( '#add_description' ).val(),
             employeenum = $form.find( '#employeenum' ).val(),
+            raising = $form.find("#add_raising").prop('checked').toString(),
             url = $form.attr( 'action' );
 
         // send data and get results
         $.ajax({
           type: "POST",
           url : url,
-          data: { owner_name: owner_name, owner_email: owner_email, title: title, type: type, address: address, uri: uri, description: description, employeenum: employeenum }
+          data: { owner_name: owner_name, owner_email: owner_email, title: title, type: type, address: address, uri: uri, description: description, employeenum: employeenum, raising: raising }
         }).done (function (data) {
             if(data == "success") {
               $("#modal_addform #result").html("We've received your submission and will review it shortly. Thanks!"); 

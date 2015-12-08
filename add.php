@@ -11,6 +11,7 @@ $address = parseInput($_POST['address']);
 $uri = parseInput($_POST['uri']);
 $employeenum = parseInput($_POST['employeenum']) * 1;
 $description = parseInput($_POST['description']);
+$raising = parseInput($_POST['raising']);
 $lat = 0;
 $lng = 0;
 //echo $title;
@@ -43,7 +44,7 @@ if(empty($owner_name) || empty($owner_email) || empty($title) || empty($type) ||
 
     $lat = parseInput($_POST['lat']);
     $lng = parseInput($_POST['lng']);
-    $insert = pg_query("INSERT INTO places (lat, lng, approved, title, type, address, uri, description, owner_name, owner_email, num_employees) VALUES ($lat, $lng, 1, '$title', '$type', '$address', '$uri', '$description', '$owner_name', '$owner_email', '$employeenum')") or die(pg_last_error());
+    $insert = pg_query("INSERT INTO places (lat, lng, approved, title, type, address, uri, description, owner_name, owner_email, num_employees, raising) VALUES ($lat, $lng, 1, '$title', '$type', '$address', '$uri', '$description', '$owner_name', '$owner_email', '$employeenum', '$raising')") or die(pg_last_error());
     //$insert = pg_query("INSERT INTO places (approved, title, type, address, uri, description, owner_name, owner_email) VALUES (1, '$title', '$type', '$address', '$uri', '$description', '$owner_name', '$owner_email')") or die(pg_last_error());
     echo "posted";
     exit;
@@ -53,7 +54,7 @@ if(empty($owner_name) || empty($owner_email) || empty($title) || empty($type) ||
     // insert into db, wait for approval
     //$insert = pg_query("INSERT INTO places (lat, lng, approved, title, type, address, uri, description, owner_name, owner_email) VALUES ($lat, $lng, 1, '$title', '$type', '$address', '$uri', '$description', '$owner_name', '$owner_email')") or die(pg_last_error());
 
-    $insert = pg_query("INSERT INTO places (lat, lng, approved, title, type, address, uri, description, owner_name, owner_email, num_employees) VALUES ($lat, $lng, null, '$title', '$type', '$address', '$uri', '$description', '$owner_name', '$owner_email', '$employeenum')") or die(pg_last_error());
+    $insert = pg_query("INSERT INTO places (lat, lng, approved, title, type, address, uri, description, owner_name, owner_email, num_employees, raising) VALUES ($lat, $lng, null, '$title', '$type', '$address', '$uri', '$description', '$owner_name', '$owner_email', '$employeenum', '$raising')") or die(pg_last_error());
     //$insert = pg_query("INSERT INTO places (approved, title, type, address, uri, description, owner_name, owner_email) VALUES (null, '$title', '$type', '$address', '$uri', '$description', '$owner_name', '$owner_email')") or die(pg_last_error());
     // geocode new submission
     $hide_geocode_output = true;

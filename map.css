@@ -35,7 +35,7 @@ html, body, #map_canvas
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 #map_canvas
 {
@@ -634,4 +634,22 @@ font-size: 100%;
   background-color: #FFD700;
   text-align: center;
   width: 100px;
+}
+@media only screen and (max-width: 675px) {
+ .form-horizontal .control-label {
+   display:block;
+   float:none;
+   text-align:left;
+ }
+ .form-horizontal .controls {
+   margin-left:0;
+ }
+}
+@media only screen and (min-width: 675px) {
+ .form-horizontal .control-label {
+   width:25%;
+ }
+ .form-horizontal .controls {
+   margin-left:30%;
+ }
 }

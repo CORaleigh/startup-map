@@ -31,6 +31,12 @@ if($task == "doedit") {
   $owner_name = str_replace( "'", "\\'", str_replace( "\\", "\\\\", $_POST['owner_name'] ) );
   $owner_email = $_POST['owner_email'];
   $contact_name = $_POST['contact_name'];
+  $raising = $_POST['raising'];
+  if (strcmp($raising, "on") == 0) {
+    $raising = "true";
+  } else {
+    $raising = "false";
+  }
   if (is_numeric($_POST['num_employees'])){
     $num_employees = $_POST['num_employees'];
   } else {
@@ -57,7 +63,7 @@ if($task == "doedit") {
 
   pg_query("UPDATE places SET title='$title', type='$type', address='$address', uri='$uri', lat='$lat', lng='$lng',
     description='$description', owner_name='$owner_name', contact_name= '$contact_name', owner_email= '$owner_email',
-    num_employees =$num_employees, revenue=$revenue, funding_level='$funding_level', milestone='$milestone', notes='$notes'
+    num_employees =$num_employees, revenue=$revenue, funding_level='$funding_level', milestone='$milestone', notes='$notes', raising='$raising'
     WHERE id='$place_id'") or die(pg_last_error());
   //removed  LIMIT 1
   //pg_query("UPDATE places SET title='$title' WHERE id='$place_id' LIMIT 1");
@@ -114,7 +120,16 @@ if($task == "doedit") {
         <textarea class="input input-xlarge" name="description"><?php echo $place[description]?></textarea>
       </div>
     </div>
-
+    <div class="control-group">
+      <label class="control-label" for="add_raising">Raising Money?</label>
+      <div class="controls">
+        <div class="checkbox">
+        <label>
+        <input type="checkbox" class="input-xlarge" name="raising" <?php if($place[raising] == 'true'){echo 'checked';}?> >
+        </label>
+        </div>
+      </div>
+    </div>  
     <div class="control-group">
       <label class="control-label" for="">Executive Name</label>
       <div class="controls">
